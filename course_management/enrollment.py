@@ -1,6 +1,9 @@
 # enrollment.py
 
-from ... course_management_system.database.database_mg import DataBasemanagement
+def get_db_manager(self):
+    from database.database_mg import DataBasemanagement
+    return DataBasemanagement()
+
 
 class Enrollment:
 
@@ -8,7 +11,7 @@ class Enrollment:
         self.enrollment_id = enrollment_id
         self.student_id = student_id
         self.course_id = course_id
-        self.data_base = DataBasemanagement()
+        self.data_base = get_db_manager(self)
 
     def enrollment_display(self):
         return f"Enrollment Id:{self.enrollment_id},Student Id:{self.student_id},Course Id:{self.course_id}"

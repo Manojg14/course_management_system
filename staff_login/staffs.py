@@ -1,11 +1,13 @@
 # staff.py
-from ... course_management_system.student_login.student import Student
-from ... course_management_system.course_management.course import Course
-from ... course_management_system.course_management.enrollment import Enrollment
-from ... course_management_system.course_management.assignment import Assignment
-from ... course_management_system.course_management.submission import Submission
+from student_login.student import Student
+from course_management.course import Course
+from course_management.enrollment import Enrollment
+from course_management.assignment import Assignment
+from course_management.submission import Submission
 
-from ... course_management_system.database.database_mg import DataBasemanagement
+def get_db_manager(self):
+    from database.database_mg import DataBasemanagement
+    return DataBasemanagement()
 
 class Staff:
     def __init__(self, staff_id = None, staff_name = None, email = None, phone_no = None, password_hash = None):
@@ -14,7 +16,7 @@ class Staff:
             self.email = email
             self.phone_no = phone_no
             self.password_hash = password_hash
-            self.data_base = DataBasemanagement()
+            self.data_base = get_db_manager(self)
 
     def staff_display(self):
             return f"User Id:{self.staff_id},User Name:{self.staff_name},Email:{self.email},Phone no:{self.phone_no},Password Hash:{self.password_hash}"

@@ -1,6 +1,9 @@
 # course.py
 
-from ... course_management_system.database.database_mg import DataBasemanagement
+def get_db_manager(self):
+    from database.database_mg import DataBasemanagement
+    return DataBasemanagement()
+
 
 class Course:
 
@@ -11,7 +14,7 @@ class Course:
         self.max_enrollment = max_enrollment
         self.course_fee = course_fee
         self.staff_id = staff_id
-        self.data_base = DataBasemanagement()
+        self.data_base = get_db_manager(self)
 
     def course_display(self):
         return f"Course Id:{self.course_id},Title:{self.title},Description:{self.description}Max Enrollment:{self.max_enrollment},Course Fee:{self.course_fee},Staff Id:{self.staff_id}"

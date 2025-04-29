@@ -1,6 +1,8 @@
 # submission.py
 
-from ... course_management_system.database.database_mg import DataBasemanagement
+def get_db_manager(self):
+    from database.database_mg import DataBasemanagement
+    return DataBasemanagement()
 
 class Submission:
     def __init__(self, submission_id = None, assignment_id = None, student_id = None, title = None, description = None, submission_date = None):
@@ -10,7 +12,7 @@ class Submission:
         self.title = title
         self.description = description
         self.submission_date = submission_date
-        self.data_base = DataBasemanagement()
+        self.data_base = get_db_manager(self)
 
     def add_submission(self):
         submission_id = int(input("Enter Your Submission id: "))

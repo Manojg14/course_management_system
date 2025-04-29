@@ -3,10 +3,16 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from ... course_management_system.staff_login.staffs import Staff
-from ... course_management_system.course_management.assignment import Assignment
-from ... course_management_system.course_management.submission import Submission
-from ... course_management_system.database_mg import DataBasemanagement
+from course_management.assignment import Assignment
+from course_management.submission import Submission
+
+def get_db_manager(self):
+    from database.database_mg import DataBasemanagement
+    return DataBasemanagement()
+
+def get_staff(self):
+    from staff_login.staffs import Staff
+    return Staff()
 
 class Student:
 
@@ -16,7 +22,7 @@ class Student:
             self.email = email
             self.phone_no = phone_no
             self.password_hash = password_hash
-            self.data_base = DataBasemanagement()
+            self.data_base = get_db_manager(self)
 
     def student_display(self):
         return f"User Id:{self.student_id},User Name:{self.student_name},Email:{self.email},Phone no:{self.phone_no},Password Hash:{self.password_hash}"
@@ -91,7 +97,7 @@ class Student:
 
 # ============================ student_login =============================================================================
 
-class StudentLogin(Student,Staff,Assignment,Submission):
+class StudentLogin(Student,Assignment,Submission):
 
     def handle_student(self):
         if self.student_login():

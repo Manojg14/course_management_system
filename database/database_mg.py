@@ -1,12 +1,16 @@
 import pymysql
 
-from .. staff_login.staffs import Staff
-from .. student_login.student import Student
-from .. admin_login.admin import Admin
-from .. course_management.course import Course
-from .. course_management.assignment import Assignment
-from .. course_management.enrollment import Enrollment
-from .. course_management.submission import Submission
+from staff_login.staffs import Staff
+from student_login.student import Student
+
+from course_management.course import Course
+from course_management.assignment import Assignment
+from course_management.enrollment import Enrollment
+from course_management.submission import Submission
+
+def get_admin(self):
+    from admin_login.admin import Admin
+    return Admin()
 
 class DataBasemanagement:
     def __init__(self):
@@ -46,7 +50,7 @@ class DataBasemanagement:
     def get_admin_users(self):
         self.cursor.execute("SELECT admin_id, admin_name, password_hash FROM admin_table")
         rows = self.cursor.fetchall()
-        return [Admin(*row) for row in rows]
+        return [get_admin(*row) for row in rows]
 
     def delete_admin_table(self,admin_id):
         self.cursor.execute("DELETE FROM admin_table WHERE admin_id = %s",(admin_id,))

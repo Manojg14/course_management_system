@@ -1,10 +1,10 @@
 # admin.py
 
-from ... course_management_system.database.database_mg import DataBasemanagement
-from ... course_management_system.student_login.student import Student
-from ... course_management_system.staff_login.staffs import Staff
-from ... course_management_system.course_management.course import Course
-from ... course_management_system.course_management.enrollment import Enrollment
+from database.database_mg import DataBasemanagement
+from student_login.student import Student
+from staff_login.staffs import Staff
+from course_management.course import Course
+from course_management.enrollment import Enrollment
 
 
 class Admin:
