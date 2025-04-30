@@ -29,6 +29,10 @@ class Course:
         max_enrollment = int(input("Enter max Enrollment"))
         course_fee = float(input("Enter courses Price:"))
         staff_id = int(input("Enter Staff Id:"))
+
+        if not self.data_base.staff_exists(staff_id):
+            print("Error: Staff ID does not exist. Please add the staff before assigning them to a course.")
+            return
         courses = Course(course_id, title, description, max_enrollment, course_fee, staff_id)
         self.data_base.insert_course_table(courses)
         print("Course Added Successfully!...")

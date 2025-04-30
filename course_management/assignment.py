@@ -1,11 +1,11 @@
 # assignment.py
 from datetime import datetime
 
-class Assignment:
+def get_db_manager(self):
+    from database.database_mg import DataBasemanagement
+    return DataBasemanagement()
 
-    def get_db_manager(self):
-        from database.database_mg import DataBasemanagement
-        return DataBasemanagement()
+class Assignment:
 
     def __init__(self, assignment_id = None, course_id = None, title = None, description = None, due_date = None, assignment_type = None):
         self.assignment_id = assignment_id
@@ -14,7 +14,7 @@ class Assignment:
         self.description = description
         self.due_date = due_date
         self.assignment_type = assignment_type
-        self.data_base = self.get_db_manager(self)
+        self.data_base = get_db_manager(self)
 
     def assignment_display(self):
         return f"Assignment Id:{self.assignment_id},Course Id:{self.course_id},Title:{self.title},Description:{self.description},Due Date:{self.due_date},Assignment Type:{self.assignment_type}"

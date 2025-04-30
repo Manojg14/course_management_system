@@ -9,7 +9,8 @@ from course_management.enrollment import Enrollment
 
 class Admin:
 
-    def __init__(self, admin_name = None, password_hash = None):
+    def __init__(self,admin_id = None, admin_name = None, password_hash = None):
+        self.admin_id = admin_id
         self.admin_name = admin_name
         self.password_hash = password_hash
         self.data_base = DataBasemanagement()
@@ -23,9 +24,10 @@ class Admin:
             return False
 
     def add_admin(self):
+        admin_id = int(input("enter admin id:"))
         admin_name = input("enter admin name:")
         password_hash = input("enter admin password:")
-        admins = Admin(admin_name, password_hash)
+        admins = Admin(admin_id,admin_name,password_hash)
         self.data_base.insert_admin_table(admins)
         print("Admin Added Successfully!...")
 
@@ -63,6 +65,7 @@ class AdminLogin(Admin,Student,Staff,Course,Enrollment):
         print("2. View")
         print("3. Update")
         print("4. Delete")
+        print("5. Payments")
         print("=" * 65)
 
         admin_choice = int(input("Enter your choice: "))
@@ -114,6 +117,25 @@ class AdminLogin(Admin,Student,Staff,Course,Enrollment):
                 self.delete_staffs()
             elif choice == 4:
                 self.delete_students()
+
+        elif admin_choice == 5:
+            payments = self.data_base.get_all_payments()
+            print("\n========== Payment History ==========")
+            for row in payments:
+                print(f"""
+            Payment ID:      {row[0]}
+            Student ID:      {row[1]}
+            Student Name:    {row[2]}
+            Course ID:       {row[3]}
+            Course Name:     {row[4]}
+            Amount Paid:     ₹{row[5]}
+            Pending Amount:  ₹{row[6]}
+            Status:          {row[7]}
+            Payment Date:    {row[8]}
+            ---------------------------------------
+                    """)
+            print("=====================================")
+
         else:
             print("Enter a valid number!")
 

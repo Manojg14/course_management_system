@@ -4,6 +4,7 @@ from admin_login.admin import AdminLogin
 from staff_login.staffs import StaffLogin
 from student_login.student import StudentLogin
 
+
 def main_method():
     while True:
         print("\n================= WELCOME TO LOGIN SYSTEM ============================")

@@ -13,11 +13,8 @@ class Enrollment:
         self.course_id = course_id
         self.data_base = get_db_manager(self)
 
-    def enrollment_display(self):
+    def __repr__(self):
         return f"Enrollment Id:{self.enrollment_id},Student Id:{self.student_id},Course Id:{self.course_id}"
-
-    def __str__(self):
-        return self.enrollment_display()
 
     def add_enrollment(self):
         enrollment_id = int(input("Enter Enrollment ID: "))

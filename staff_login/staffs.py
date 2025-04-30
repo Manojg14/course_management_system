@@ -1,9 +1,11 @@
 # staff.py
+
 from student_login.student import Student
 from course_management.course import Course
 from course_management.enrollment import Enrollment
 from course_management.assignment import Assignment
 from course_management.submission import Submission
+from course_management.forum import Forum
 
 def get_db_manager(self):
     from database.database_mg import DataBasemanagement
@@ -92,7 +94,7 @@ class Staff:
 
 # ============================ staff_login =============================================================================
 
-class StaffLogin(Staff,Student,Course,Enrollment,Assignment,Submission):
+class StaffLogin(Staff,Student,Course,Enrollment,Assignment,Submission,Forum):
 
     def __init__(self):
         Student.__init__(self)
@@ -101,11 +103,12 @@ class StaffLogin(Staff,Student,Course,Enrollment,Assignment,Submission):
         Enrollment.__init__(self)
         Assignment.__init__(self)
         Submission.__init__(self)
+        Forum.__init__(self)
 
     def handle_staff(self):
         if self.staff_login():
             print("\n=================== STAFF LOGIN ===============================")
-            print("1. Add\n2. View\n3. Delete\n4. Exit")
+            print("1. Add\n2. View\n3. Delete\n4. Forum\n5. Exit")
             print("=" * 65)
             staff_choice = int(input("Enter your choice: "))
 
@@ -160,6 +163,24 @@ class StaffLogin(Staff,Student,Course,Enrollment,Assignment,Submission):
                     self.delete_assignments()
                 elif choices == 4:
                     self.delete_submission_details()
+
+            elif staff_choice == 4:
+                    print("1. View Forum\n2. Post Message\n3. Reply to a Message")
+                    choice = input("Enter choice: ")
+                    if choice == '1':
+                        condition = input("Enter your choice (all or coursewise): ").strip().lower()
+                        if condition == 'all':
+                            self.view_forum()
+                        elif condition == 'coursewise':
+                            course_id = int(input("Enter courses ID: "))
+                            self.view_forum(course_id)
+                    elif choice == '2':
+                        self.add_forum_message()
+                        print("Message Posted")
+                    elif choice == '3':
+                        self.post_reply()
+                        print("Reply Message send Successfully!...")
+
 
             elif staff_choice == 4:
                 print("Exiting Staff Panel...")

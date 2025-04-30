@@ -5,6 +5,8 @@ from email.mime.multipart import MIMEMultipart
 
 from course_management.assignment import Assignment
 from course_management.submission import Submission
+from course_management.forum import Forum
+from payments.payment_process import Payment
 
 def get_db_manager(self):
     from database.database_mg import DataBasemanagement
@@ -97,12 +99,12 @@ class Student:
 
 # ============================ student_login =============================================================================
 
-class StudentLogin(Student,Assignment,Submission):
+class StudentLogin(Student,Assignment,Submission,Forum):
 
     def handle_student(self):
         if self.student_login():
             print("\n=================== STUDENT LOGIN ===============================")
-            print("1. Assignment\n2. Submit\n3. Query\n4. Exit")
+            print("1. Assignment\n2. Submit\n3. Query\n4. Forum\n5. Payment\n6. Exit")
             print("=" * 70)
             student_choice = int(input("Enter your choice: "))
 
@@ -141,5 +143,30 @@ class StudentLogin(Student,Assignment,Submission):
                     print("Unable to retrieve staff email.")
 
             elif student_choice == 4:
+                    print("1. View Forum\n2. Post Message\n3. Reply to a Message")
+                    choice = input("Enter choice: ")
+                    if choice == '1':
+                        condition = input("Enter your choice (all or coursewise): ").strip().lower()
+                        if condition == 'all':
+                            self.view_forum()
+                        elif condition == 'coursewise':
+                            course_id = int(input("Enter courses ID: "))
+                            self.view_forum(course_id)
+                    elif choice == '2':
+                        self.add_forum_message()
+                        print("Message Posted")
+                    elif choice == '3':
+                        self.post_reply()
+                        print("Reply Message send Successfully!...")
+
+            elif student_choice == 5:
+                payment_handler = Payment()
+                student_id = int(input("Enter your Student ID: "))
+                payment_handler.process_payment(student_id)
+
+
+
+            elif student_choice == 6:
                 print("Exiting Student Panel...")
+
 
