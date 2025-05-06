@@ -1,4 +1,7 @@
 # staff.py
+import random
+import smtplib
+from email.mime.text import MIMEText
 
 from student_login.student import Student
 from course_management.course import Course
@@ -26,13 +29,51 @@ class Staff:
     def __str__(self):
             return self.staff_display()
 
+
+    def generate_otp(self, length=6):
+        return ''.join(str(random.randint(0, 9)) for _ in range(length))
+
+    def send_otp_email(self, to_email, otp,user_type = 'Staff'):
+        sender_email = "manojggm14@gmail.com"
+        app_password = "hafrydizwwblhtqo"
+
+        subject = f"OTP for {user_type} Login"
+        body = f"Dear {user_type},\n\nYour OTP for login is: {otp}\n\nRegards,\nInstitute Admin"
+
+        msg = MIMEText(body)
+        msg['Subject'] = subject
+        msg['From'] = sender_email
+        msg['To'] = to_email
+
+        try:
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login(sender_email, app_password)
+            server.sendmail(sender_email, to_email, msg.as_string())
+            server.quit()
+            print(f"OTP sent to {to_email}")
+        except Exception as e:
+            print("Failed to send OTP email:", e)
+
+
     def staff_login(self):
-            staff_name = input("Enter Staff Username: ")
+            staff_id = input("Enter Staff UserId: ")
             password_hash = input("Enter Staff Password: ")
-            staff = self.data_base.check_staff_credentials(staff_name, password_hash)
+            staff = self.data_base.check_staff_credentials(staff_id, password_hash)
             if staff:
-                print("Staff login successful!")
-                return True
+                print("Credentials verified. Sending OTP...")
+                staff_email = staff[2]
+
+                otp = self.generate_otp()
+                self.send_otp_email(staff_email, otp)
+
+                entered_otp = input("Enter the OTP sent to your email: ")
+                if entered_otp == otp:
+                    print("Staff login successful!")
+                    return True
+                else:
+                    print("Invalid OTP. Access denied.")
+                    return False
             else:
                 print("Invalid Staff credentials.")
                 return False

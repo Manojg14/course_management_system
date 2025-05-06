@@ -1,7 +1,9 @@
 # student.py
+import random
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+
 
 from course_management.assignment import Assignment
 from course_management.submission import Submission
@@ -12,7 +14,7 @@ def get_db_manager(self):
     from database.database_mg import DataBasemanagement
     return DataBasemanagement()
 
-def get_staff(self):
+def get_staff():
     from staff_login.staffs import Staff
     return Staff()
 
@@ -32,13 +34,50 @@ class Student:
     def __str__(self):
         return self.student_display()
 
+    def generate_otp(self, length=6):
+        return ''.join(str(random.randint(0, 9)) for _ in range(length))
+
+    def send_otp_email(self, to_email, otp,user_type = 'Staff'):
+        sender_email = "manojggm14@gmail.com"
+        app_password = "hafrydizwwblhtqo"
+
+        subject = f"OTP for {user_type} Login"
+        body = f"Dear {user_type},\n\nYour OTP for login is: {otp}\n\nRegards,\nInstitute Admin"
+
+        msg = MIMEText(body)
+        msg['Subject'] = subject
+        msg['From'] = sender_email
+        msg['To'] = to_email
+
+        try:
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login(sender_email, app_password)
+            server.sendmail(sender_email, to_email, msg.as_string())
+            server.quit()
+            print(f"OTP sent to {to_email}")
+        except Exception as e:
+            print("Failed to send OTP email:", e)
+
     def student_login(self):
-        student_name = input("Enter Student Username: ")
+
+        student_id = input("Enter Student UserId: ")
         password_hash = input("Enter Student Password: ")
-        student = self.data_base.check_student_credentials(student_name, password_hash)
+        student = self.data_base.check_student_credentials(student_id, password_hash)
         if student:
-            print("Student login successful!")
-            return True
+            print("Credentials verified. Sending OTP...")
+            student_email = student[2]
+
+            otp = self.generate_otp()
+            self.send_otp_email(student_email, otp)
+
+            entered_otp = input("Enter the OTP sent to your email: ")
+            if entered_otp == otp:
+                print("Student login successful!")
+                return True
+            else:
+                print("Invalid OTP. Access denied.")
+                return False
         else:
             print("Invalid Student credentials.")
             return False

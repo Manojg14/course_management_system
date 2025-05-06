@@ -104,10 +104,10 @@ class DataBasemanagement:
                 self.cnx.commit()
 
 
-    def check_staff_credentials(self, staff_name, password_hash):
+    def check_staff_credentials(self, staff_id, password_hash):
 
-        sql = "SELECT * FROM staff_details WHERE staff_name = %s AND password_hash = %s"
-        self.cursor.execute(sql, (staff_name, password_hash))
+        sql = "SELECT * FROM staff_details WHERE staff_id = %s AND password_hash = %s"
+        self.cursor.execute(sql, (staff_id, password_hash))
         result = self.cursor.fetchone()
         if result:
             return result
@@ -167,10 +167,10 @@ class DataBasemanagement:
                     self.cursor.execute(sql, (password_hash, student_id))
                 self.cnx.commit()
 
-    def check_student_credentials(self, student_name, password_hash):
+    def check_student_credentials(self, student_id, password_hash):
 
-        sql = "SELECT * FROM student_details WHERE student_name = %s AND password_hash = %s"
-        self.cursor.execute(sql, (student_name, password_hash))
+        sql = "SELECT * FROM student_details WHERE student_id = %s AND password_hash = %s"
+        self.cursor.execute(sql, (student_id, password_hash))
         result = self.cursor.fetchone()
         if result:
             return result
