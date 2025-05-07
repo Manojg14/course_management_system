@@ -2,6 +2,7 @@
 import random
 import smtplib
 from email.mime.text import MIMEText
+from datetime import datetime,timedelta
 
 from student_login.student import Student
 from course_management.course import Course
@@ -33,9 +34,10 @@ class Staff:
     def generate_otp(self, length=6):
         return ''.join(str(random.randint(0, 9)) for _ in range(length))
 
-    def send_otp_email(self, to_email, otp,user_type = 'Staff'):
+    def send_otp_email(self, to_email, user_type = 'Staff'):
         sender_email = "manojggm14@gmail.com"
         app_password = "hafrydizwwblhtqo"
+        otp = self.generate_otp()
 
         subject = f"OTP for {user_type} Login"
         body = f"Dear {user_type},\n\nYour OTP for login is: {otp}\n\nRegards,\nInstitute Admin"
@@ -51,7 +53,9 @@ class Staff:
             server.login(sender_email, app_password)
             server.sendmail(sender_email, to_email, msg.as_string())
             server.quit()
-            print(f"OTP sent to {to_email}")
+            print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Email sent to {to_email}")
+            print("OTP is valid for 1 minutes.")
+            return otp, datetime.now()
         except Exception as e:
             print("Failed to send OTP email:", e)
 
@@ -64,19 +68,20 @@ class Staff:
                 print("Credentials verified. Sending OTP...")
                 staff_email = staff[2]
 
-                otp = self.generate_otp()
-                self.send_otp_email(staff_email, otp)
+                otp, otp_sent_time = self.send_otp_email(to_email= staff_email, user_type='Staff')
 
                 entered_otp = input("Enter the OTP sent to your email: ")
-                if entered_otp == otp:
-                    print("Staff login successful!")
+                current_time = datetime.now()
+
+                if current_time - otp_sent_time > timedelta(minutes=1):
+                    print(f"[{current_time.strftime('%Y-%m-%d %H:%M:%S')}] OTP expired.")
+                    return False
+                elif entered_otp == otp:
+                    print(f"[{current_time.strftime('%Y-%m-%d %H:%M:%S')}] Staff login successful!")
                     return True
                 else:
-                    print("Invalid OTP. Access denied.")
+                    print(f"[{current_time.strftime('%Y-%m-%d %H:%M:%S')}] Invalid OTP. Access denied.")
                     return False
-            else:
-                print("Invalid Staff credentials.")
-                return False
 
     def add_staff(self):
             staff_id = int(input(f"Enter Staff ID: "))
