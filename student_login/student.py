@@ -127,7 +127,7 @@ class Student:
 
         elif changes == 'phone no':
             phone_no = input("enter update phone no:")
-            self.data_base.update_student_details(student_id=student_id, phone_no=phone_no)
+            self.data_base.update_student_details(student_id = student_id, phone_no = phone_no)
             print(f"Student Phone No added to student id {student_id} Successfully!..")
 
         elif changes == 'password hash':
